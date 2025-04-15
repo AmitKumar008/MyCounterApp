@@ -1,49 +1,8 @@
-// import { View, Text } from 'react-native';
-
-// import React, { useEffect } from 'react';
-// import axios from 'axios';
-
-// const HomeScreen = () => {
-//   const [isLoading, setIsLoading] = useState(false);
-
-// useEffect(() => {
-//     GetCategoryBlogApi();
-//   }, []);
-
-//   const GetCategoryBlogApi = async () => {
-//     const usertkn = await AsyncStorage.getItem("authToken");
-//     // console.log('token::::::', usertkn);
-//     setIsLoading(true);
-//     try {
-
-//       const response = await axios.get(`${API.BLOG_MAIN_SCREEN}`,
-//         { headers: { "Authorization": ` ${usertkn}` } }
-//       );
-//       console.log(response);
-
-//     }
-//     catch (error) {
-//     console.log(response);or.........", error.response.data.message);
-//       // setIsLoading(false);
-
-//     }
-//     setIsLoading(false);
-//   };
-//   return (
-//     <View>
-//       <Text>HomeScreen</Text>
-//     </View>
-//   )
-// }
-
-// export default HomeScreen
-
 import axios from 'axios';
-import React, {useEffect, useState, useMemo, useCallback, useRef} from 'react';
+import React, {useEffect, useState, useCallback, useRef} from 'react';
 import {
   View,
   Text,
-  Button,
   FlatList,
   StyleSheet,
   ActivityIndicator,
@@ -65,7 +24,7 @@ const HomeScreen = (props: {
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [paginationLoader, setPaginationLoader] = useState<boolean>(false);
-  const [shouldRefresh, setshouldRefresh] = useState<boolean>(false);
+  const [shouldRefresh, setShouldRefresh] = useState<boolean>(false);
 
   const showToast = (message: any) => {
     Toast.show(message, {
@@ -88,7 +47,7 @@ const HomeScreen = (props: {
   const checkon = () => {
     setData([]);
     setLoading(true);
-    setshouldRefresh(true);
+    setShouldRefresh(true);
     pagination.current.currentPage = 1;
     pagination.current.lastPage = 1;
     pagination.current.loader = false;
@@ -100,7 +59,7 @@ const HomeScreen = (props: {
   const onRefresh = React.useCallback(() => {
     checkon();
     wait(2000).then(() => {
-      setshouldRefresh(false);
+      setShouldRefresh(false);
     });
   }, []);
 
@@ -136,7 +95,7 @@ const HomeScreen = (props: {
       showToast('FETCHING ERROR');
       setLoading(false);
     } finally {
-      setshouldRefresh(false);
+      setShouldRefresh(false);
     }
   };
 
@@ -179,7 +138,7 @@ const HomeScreen = (props: {
   const increment = useCallback(() => setCounter(prev => prev + 1), []);
   const decrement = useCallback(() => setCounter(prev => prev - 1), []);
 
-  //render FlatList Item
+  //Render FlatList Items
   const renderItem = useCallback(({item}: {item: any; index: any}) => {
     return <ListTab items={item} tabClick={onItemClick} />;
   }, []);
@@ -193,9 +152,14 @@ const HomeScreen = (props: {
 
   //load more fun call for fetch data
   const loadMoreData = () => {
-    pagination.current.loader = true;
-    setPaginationLoader(true);
-    getFetchDataLoadMore(pagination.current.currentPage, false);
+    if (
+      pagination.current.currentPage <= pagination.current.lastPage &&
+      !pagination.current.loader
+    ){
+      pagination.current.loader = true;
+      setPaginationLoader(true);
+      getFetchDataLoadMore(pagination.current.currentPage, false);
+    }
   };
 
   return (
@@ -216,8 +180,6 @@ const HomeScreen = (props: {
             data={data}
             keyExtractor={item => item.id.toString()}
             renderItem={renderItem}
-            // initialNumToRender={10}
-            // maxToRenderPerBatch={10}
             onEndReachedThreshold={0.5}
             onEndReached={loadMoreData}
             ListFooterComponent={() => {

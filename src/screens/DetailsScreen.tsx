@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet, Alert, ActivityIndicator} from 'react-native';
+import {View, Text, StyleSheet,ActivityIndicator} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Toast from 'react-native-root-toast';
 import axios from 'axios';
@@ -19,7 +19,7 @@ const DetailsScreen = (props: {route: {params: {itemId: any}}}) => {
   }, []);
 
   const fetchDetailData = async () => {
-    showToast('FETCHING DATA IN CHILD COMPONENT...');
+    showToast('FETCHING DATA IN CHILD COMPONENT.');
     setLoading(true);
 
     const baseURL = 'https://jsonplaceholder.typicode.com/posts/';
@@ -68,7 +68,7 @@ export default DetailsScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 50,
+    paddingTop: 20,
   },
   item: {
     padding: 15,

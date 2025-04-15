@@ -3,7 +3,6 @@ import {
   SafeAreaView,
   StatusBar,
   StyleSheet,
-  useColorScheme,
 } from 'react-native';
 
 import {NativeBaseProvider} from 'native-base';
